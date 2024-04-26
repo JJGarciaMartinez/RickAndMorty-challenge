@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { CaretUp } from "@phosphor-icons/react";
+import Favorites from "pages/Favorites";
+import Navbar from "components/Nav/Navbar";
+import Home from "pages/Home";
+import LoginForm from "pages/Login";
+import Locations from "pages/Locations";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showToTop, setShowToTop] = useState(false);
+
+  const toTop = () => {
+    window.scrollTo(0, 0);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowToTop(true);
+      } else {
+        setShowToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <Navbar />
+
+      <div className={`to-top ${showToTop ? "show" : ""}`}>
+        <button onClick={toTop}>
+          <CaretUp size={25} />
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/locations" element={<Locations />} />
+
+          <Route path="/login" element={<LoginForm onLogin={() => {}} />} />
+
+          <Route path="/favorites" element={<Favorites />} />
+        </Routes>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
