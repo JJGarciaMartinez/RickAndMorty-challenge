@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { validateCredentials } from "validations/LoginValidation";
 import Logo from "assets/icon-512x512.webp";
