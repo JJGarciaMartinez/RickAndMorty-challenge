@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { validateCredentials } from "validations/LoginValidation";
 import Logo from "assets/icon-512x512.webp";
 import styles from "pages/styles/Login.module.css";
+import { Eye, EyeClosed } from "@phosphor-icons/react";
 
 interface LoginFormProps {
   onLogin: () => void;
@@ -13,6 +14,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     const validationError = validateCredentials(username, password);
@@ -27,6 +29,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
     } else {
       setError("Credenciales incorrectas");
     }
+  };
+
+  const seePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -46,16 +52,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         >
           <input
             type="text"
-            placeholder="Usuario"
+            placeholder="User"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <span className={styles.password}>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="button" onClick={seePassword}>
+              {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+            </button>
+          </span>
+
           {error && (
             <div
               style={{
@@ -68,7 +82,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
               {error}
             </div>
           )}
-          <button type="submit">Sign in</button>
+          <button className={styles.submit} type="submit">
+            Sign in
+          </button>
         </form>
       </div>
 
